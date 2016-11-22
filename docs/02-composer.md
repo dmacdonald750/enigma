@@ -41,9 +41,10 @@ You can and should add dependencies on PHP extension libraries to your `composer
 file.  For example, if mbstring is required, add
 ```json
   "require": {
-    ...
     "ext-mbstring": ">=7.0.0"
   }
 ```
 You can use `composer show --platform` to see the list of locally installed extension
 libraries.
+
+[next>>](03-errors.md)

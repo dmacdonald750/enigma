@@ -64,3 +64,120 @@ to `debug=0` in `.env` and rerun both tests.
 
 
 ## Error Handling the Hard Way
+
+
+As an exercise, let's write our own class for error handling. We have two functions
+we need to deal with, [set_error_handler](http://php.net/manual/en/function.set-error-handler.php)
+and [set_exception_handler](http://php.net/manual/en/function.set-exception-handler.php), so let's
+wrap a class around them knowing that we need to handle production and development
+modes differently.
+
+```php
+final class ErrorHandler
+{
+  private $debug;
+
+  public function __construct($debug)
+  {
+    $this->debug = $debug;
+    error_reporting(E_ALL);
+  }
+
+  public function register()
+  {
+    if ($this->debug) {
+      set_error_handler(array($this, 'myDebugErrorHandler'));
+      set_exception_handler(array($this, 'myDebugExceptionHandler'));
+    } else {
+      set_error_handler(array($this, 'myErrorHandler'));
+      set_exception_handler(array($this, 'myExceptionHandler'));
+    }
+  }
+
+  public function myErrorHandler($errno, $errstr) {}
+
+  public function myDebugErrorHandler($errno, $errstr) {}
+
+  public function myExceptionHandler($exception) {}
+
+  public function myDebugExceptionHandler($exception){}
+}
+```
+
+In `myExceptionHandler`, we are dealing with exceptions that have not been otherwise
+caught and so we have an exceptional condition that must halt the application. The only
+purpose of `myExceptionHandler` then is to halt gracefully. In production mode, we should
+show an http 500 error page; a stack trace in development mode.
+
+```php
+public function myExceptionHandler($exception)
+{
+  header("HTTP/1.0 500 Internal Server Error");
+  include("500.html");
+  exit;
+}
+
+public function myDebugExceptionHandler($exception)
+{
+  echo "<div>Uncaught exception: " , $exception->getMessage(), " ";
+  echo 'thrown in ' . $exception->getFile() . ' on line ' . $exception->getLine() . '</div>';
+  echo 'Stack trace:<pre>' . $exception->getTraceAsString() . '</pre>';
+  exit;
+}
+```
+
+The `500.html` error page simply says 'Whoops! An error occurred.'
+
+In `MyErrorHandler`, we are generally dealing with errors invoked by
+[trigger_error()](http://php.net/manual/en/function.trigger-error.php) so our function must
+handle different error types: errors, warnings and notices.  In debug mode, we
+can halt on any error type but in production
+we only want to halt on errors while warnings and notices allow execution to continue.
+
+```php
+public function myErrorHandler($errno, $errstr, $errFile, $errLine, $errContext)
+{
+  switch ($errno) {
+    case E_USER_ERROR:
+      header("HTTP/1.0 500 Internal Server Error");
+      include("500.html");
+      exit;
+    case E_USER_WARNING:
+    case E_USER_NOTICE:
+    default:
+  }
+  /* Don't execute PHP internal error handler */
+  return true;
+}
+
+public function myDebugErrorHandler($errno, $errstr, $errFile, $errLine, $errContext)
+{
+  switch ($errno) {
+    case E_USER_ERROR:
+      $msg = "ERROR";
+      break;
+    case E_USER_WARNING:
+      $msg = "WARNING";
+      break;
+    case E_USER_NOTICE:
+      $msg= "NOTICE";
+      break;
+    default:
+      $msg = "Unknown error type";
+      break;
+  }
+  echo "<div>$msg [$errno] $errstr: $errline in file $errfile</div>\n";
+  print_r($errContext);
+  die;
+}
+
+```
+
+Now in `Bootstrap.php` we simply need:
+
+```php
+$handlers = new \Enigma\ErrorHandler($DEBUG);
+$handlers->register();
+```
+
+[next>>](04-views.md)
