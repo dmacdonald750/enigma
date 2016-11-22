@@ -23,4 +23,6 @@ $handlers->register();
 #throw new \Exception('DOH!!');
 #trigger_error('HA HA');
 
-echo "Hello world!";
+$loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/views');
+$twig = new \Twig_Environment($loader);
+echo $twig->render('index.html', array('name' => 'world'));
