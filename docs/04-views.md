@@ -20,16 +20,16 @@ one of more popular ones: [Twig](http://twig.sensiolabs.org/). Use Composer to i
 ```
  composer require twig/twig:~1.0
  ```
-Let's create a folder `views` to keep our templates. Now create a simple `index.html`
+Let's create a folder `templates` to keep our templates. Now create a simple `home.twig`
 template to display 'Hello World'.
 ```
 Hello {{ name }}!
 ```
 Finally, update `Bootstrap.php` to intialize Twig and render our new template.
 ```php
-$loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/views');
+$loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/templates');
 $twig = new \Twig_Environment($loader);
-echo $twig->render('index.html', array('name' => 'world'));
+echo $twig->render('home.twig', array('name' => 'world'));
 ```
 
 ## Layout
@@ -56,22 +56,22 @@ templates can override. Let's add a layout template.
 We use [Normalize](https://github.com/necolas/normalize.css) to "normalize" styles
 for a wide range of elements and other inconsistencies across browsers.
 
-Now update the `index.html` template to inherit the layout.
+Now update the `home.twig` template to inherit the layout.
 ```
-{% extends "layout.html" %}
+{% extends "layout.twig" %}
 {% block content %}
 Hello {{ name }}!
 {% endblock %}
 ```
 
-When Twig renders `index.html` it loads `layout.html` and then replaces the 'content'
-block in `layout.html` with the 'content' block from `index.html`.
+When Twig renders `home.twig` it loads `layout.twig` and then replaces the 'content'
+block in `layout.twig` with the 'content' block from `home.twig`.
 
 ## Themes
 
 A theme is the CSS we use to stylize the layout. Here we can set text sizes and colors, column
 widths, background colors, etc. We'll come back to this in later chapters, but for now
 we'll just add a simple `style.css` and `css` folder to our `public` directory.  Finally, add the `style.css`
-file to the stylesheets in `layout.html`.
+file to the stylesheets in `layout.twig`.
 
-[next>>](05-routing.md)
+[next>>](05-pages.md)
