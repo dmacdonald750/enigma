@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -20,31 +20,60 @@ $DEBUG = getenv('debug');
 $handlers = new \Enigma\ErrorHandler($DEBUG);
 $handlers->register();
 
+
+#$page = new \Enigma\Models\Page;
+#$page->create(array('title'=>'Test', 'body'=>'This is a test', 'slug'=>'test'));
 #throw new \Exception('DOH!!');
 #trigger_error('HA HA');
 
 $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/templates');
 $twig = new \Twig_Environment($loader);
 
-#echo $_SERVER['REQUEST_URI'];
-$path = strtok($_SERVER['REQUEST_URI'], '?');
-$parts = explode("/", $path);
-#echo count($parts);
-if ($path == "/") {
-  echo $twig->render('home.twig', array('name' => 'world'));
-} elseif ($parts[1] == 'page') {
-  $slug = $parts[2];
-  try {
-    $markdownStr = \Enigma\Models\File::retrieve($slug);
-  } catch (\Enigma\FileNotFoundException $e) {
-    header("HTTP/1.0 404 Not Found");
-    echo $twig->render('404.twig');
-    exit;
-  }
-  $renderer = new \Enigma\Views\Markdown($twig);
-  $renderer->show($markdownStr);
-} else {
-  header("HTTP/1.0 404 Not Found");
-  echo $twig->render('404.twig');
+$routeDefinitionCallback = function (\FastRoute\RouteCollector $r) {
+    $routes = include('Routes.php');
+    foreach ($routes as $route) {
+        $r->addRoute($route[0], $route[1], $route[2]);
+    }
+};
+
+// Fetch method and URI
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+$uri = $_SERVER['REQUEST_URI'];
+
+// Strip query string (?foo=bar) and decode URI
+if (false !== $pos = strpos($uri, '?')) {
+    $uri = substr($uri, 0, $pos);
+}
+$uri = rawurldecode($uri);
+
+$dispatcher = \FastRoute\simpleDispatcher($routeDefinitionCallback);
+$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+switch ($routeInfo[0]) {
+    case \FastRoute\Dispatcher::NOT_FOUND:
+        header("HTTP/1.0 404 Not Found");
+        echo $twig->render('404.twig');
+#        $response->setContent('404 - Page not found');
+#        $response->setStatusCode(404);
+        break;
+    case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+#        $response->setContent('405 - Method not allowed');
+#        $response->setStatusCode(405);
+        header("HTTP/1.0 405 Method Not Allowed");
+        echo $twig->render('405.twig');
+        break;
+    case \FastRoute\Dispatcher::FOUND:
+        $className = $routeInfo[1][0];
+        $method = $routeInfo[1][1];
+        $vars = $routeInfo[2];
+
+#        $class = $injector->make($className);
+
+#        if ($mvc[$className] != "") {
+#            $model = $injector->make($mvc[$className]);
+#            $class->setModel($model);
+#        }
+        $class = new $className($twig);
+        $class->$method($vars);
+        break;
 }
 exit;
