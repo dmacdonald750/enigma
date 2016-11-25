@@ -64,13 +64,13 @@ if ($path == "/") {
 } elseif ($parts[1] == 'page') {
   $slug = $parts[2];
   try {
-    $markdownStr = \Enigma\Models\File::retrieve($slug);
+    $markdownStr = \Enigma\Models\MarkFileModel::retrieve($slug);
   } catch (\Enigma\FileNotFoundException $e) {
     header("HTTP/1.0 404 Not Found");
     echo $twig->render('404.twig');
     exit;
   }
-  $renderer = new \Enigma\Views\Markdown($twig);
+  $renderer = new \Enigma\Views\MarkFileView($twig);
   $renderer->show($markdownStr);
 } else {
   header("HTTP/1.0 404 Not Found");

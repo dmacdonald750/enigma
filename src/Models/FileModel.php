@@ -2,15 +2,15 @@
 
 namespace Enigma\Models;
 
-class File
+class FileModel
 {
-  public static function retrieve($slug)
-  {
-    $filename = dirname(dirname(__DIR__)) . '/pages/' . $slug . '.md';
-    if (! file_exists($filename)) {
-      throw new \Enigma\FileNotFoundException();
+    public $filename;
+
+    public function retrieve($slug)
+    {
+        $this->filename = dirname(dirname(__DIR__)) . '/templates/' . $slug . '.twig';
+        if (! file_exists($this->filename)) {
+            throw new \Enigma\FileNotFoundException();
+        }
     }
-    $str = file_get_contents($filename);
-    return $str;
-  }
 }

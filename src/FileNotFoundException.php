@@ -2,4 +2,6 @@
 
 namespace Enigma;
 
-class FileNotFoundException extends \Exception {}
+class FileNotFoundException extends \Exception
+{
+}

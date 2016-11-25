@@ -23,13 +23,13 @@ one of more popular ones: [Twig](http://twig.sensiolabs.org/). Use Composer to i
 Let's create a folder `templates` to keep our templates. Now create a simple `home.twig`
 template to display 'Hello World'.
 ```
-Hello {{ name }}!
+<h1>Hello world!</h1>
 ```
 Finally, update `Bootstrap.php` to intialize Twig and render our new template.
 ```php
 $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/templates');
 $twig = new \Twig_Environment($loader);
-echo $twig->render('home.twig', array('name' => 'world'));
+echo $twig->render('home.twig');
 ```
 
 ## Layout
@@ -54,13 +54,13 @@ templates can override. Let's add a layout template.
 </html>
 ```
 We use [Normalize](https://github.com/necolas/normalize.css) to "normalize" styles
-for a wide range of elements and other inconsistencies across browsers.
+for a wide range of elements and to correct other inconsistencies across browsers.
 
 Now update the `home.twig` template to inherit the layout.
 ```
 {% extends "layout.twig" %}
 {% block content %}
-Hello {{ name }}!
+<h1>Hello world!</h1>
 {% endblock %}
 ```
 
