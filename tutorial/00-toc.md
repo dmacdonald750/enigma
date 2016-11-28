@@ -15,3 +15,4 @@
 
 * [Appendix A - Using Atom for PHP Development](appendixA.md)
 * [Appendix B - Working with Github](appendixB.md)
+* [Appendix C - References](appendixC.md)

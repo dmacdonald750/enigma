@@ -1,0 +1,15 @@
+{
+    "name": "dmacdonald750/enigma",
+    "description": "A web application generator",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.0.0",
+        "vlucas/phpdotenv": "^2.4",
+        "filp/whoops": "^2.1"
+    },
+    "autoload": {
+      "psr-4": {
+        "Enigma\\": "src/"
+      }
+    }
+}

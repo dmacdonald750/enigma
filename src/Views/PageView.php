@@ -4,19 +4,23 @@ namespace Enigma\Views;
 
 use \League\CommonMark\CommonMarkConverter;
 
-class Markdown
+class PageView
 {
-  protected $twig;
+    protected $page;
+    protected $twig;
 
-  public function __construct($twig)
-  {
-    $this->twig = $twig;
-  }
+    public function __construct($page, $twig)
+    {
+        $this->page = $page;
+        $this->twig = $twig;
+    }
 
-  public function show($markdown)
-  {
-    $converter = new \League\CommonMark\CommonMarkConverter();
-    $html = $converter->convertToHtml($markdown);
-    echo $this->twig->render('page.twig', array('html' => $html));
-  }
+    public function retrieve()
+    {
+        $markdownStr = "# " . $this->page->title . "\n\n" . $this->page->body;
+
+        $converter = new \League\CommonMark\CommonMarkConverter();
+        $html = $converter->convertToHtml($markdownStr);
+        echo $this->twig->render('page.twig', array('html' => $html));
+    }
 }

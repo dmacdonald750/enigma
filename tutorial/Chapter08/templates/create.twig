@@ -1,0 +1,28 @@
+{% extends "layout.twig" %}
+{% block content %}
+<form method="post">
+<input type="hidden" name="id" value="{{ page.id }}"/>
+<fieldset>
+        <div class="pure-control-group">
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" value="{{ page.title }}" placeholder="Title">
+        </div>
+
+        <div class="pure-control-group">
+            <label for="slug">Slug</label>
+            <input id="slug" name="slug" type="text" value="{{ page.slug }}" placeholder="Slug">
+        </div>
+
+        <div class="pure-control-group">
+            <label for="body">Body</label>
+            <textarea id="body" name="body" placeholder="Body">
+            {{ page.body }}
+            </textarea>
+        </div>
+
+        <div class="pure-controls">
+            <button type="submit" name="submit" class="pure-button pure-button-primary">Submit</button>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}
