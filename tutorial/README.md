@@ -2,14 +2,14 @@
 
 * Part I. Developing a No-Framework PHP Application
 
-1. [Hello World](01-hello.md)
-2. [Composer](02-composer.md)
-3. [Error Handling](03-errors.md)
-4. [Views](04-views.md)
-5. [Dynamic Pages](05-pages.md)
-6. [Routing](06-routing.md)
-7. [HTTP](07-http.md)
-8. [CRUD](08-crud.md)
+1. [Hello World](Chapter01/)
+2. [Composer](Chapter02/)
+3. [Error Handling](Chapter03/)
+4. [Views](Chapter04/)
+5. [Dynamic Pages](Chapter05/)
+6. [Routing](Chapter06/)
+7. [HTTP](Chapter07)
+8. [CRUD](Chapter08)
 
 * Part II. Developing a PHP Web Application Generator
 
