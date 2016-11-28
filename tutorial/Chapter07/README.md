@@ -42,3 +42,5 @@ $routeInfo = $dispatcher->dispatch($request->getMathod(), $request->getPath());
 
 Let's update our application such that we can put a `$response->send()` at the end
 of `Bootstrap.php`.
+
+[Next>>](Chapter08/)

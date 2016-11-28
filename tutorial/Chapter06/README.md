@@ -79,3 +79,5 @@ Now we'll back up and add the `HomeController.php` to handle the homepage.
 '''php
 
 '''
+
+[Next>>](Chapter07/)

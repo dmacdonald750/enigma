@@ -180,4 +180,4 @@ $handlers = new \Enigma\ErrorHandler($DEBUG);
 $handlers->register();
 ```
 
-[next>>](04-views.md)
+[Next>>](Chapter04/)
